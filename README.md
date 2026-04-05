@@ -18,7 +18,7 @@ conda activate ac-dpo
 From the project root, run:
 
 ```bash
-python -m scripts.curriculum_dpo_toy.py
+python -m scripts.curriculum_dpo_toy
 ```
 
 Note:
