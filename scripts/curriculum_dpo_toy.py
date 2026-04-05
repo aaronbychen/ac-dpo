@@ -59,6 +59,8 @@ trainer_easy = DPOTrainer(
     beta=0.1,                  # beta parameter goes directly into the trainer in 0.8.6
     train_dataset=easy_data,
     tokenizer=tokenizer,
+    max_length=512,
+    max_prompt_length=128,
 )
 trainer_easy.train()
 
@@ -91,6 +93,8 @@ trainer_hard = DPOTrainer(
     beta=0.1,
     train_dataset=hard_data,
     tokenizer=tokenizer,
+    max_length=512,
+    max_prompt_length=128,
 )
 trainer_hard.train()
 
