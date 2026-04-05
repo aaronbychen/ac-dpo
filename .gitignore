@@ -1,0 +1,27 @@
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# environments
+.env
+.venv
+env/
+venv/
+miniconda3/
+
+# training outputs & checkpoints
+results_easy/
+results_hard/
+results_*/
+checkpoint-*/
+*.safetensors
+*.bin
+
+# weights & biases logs
+wandb/
+
+# os generated files
+.DS_Store
+Thumbs.db
