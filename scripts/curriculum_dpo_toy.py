@@ -1,8 +1,13 @@
+import os
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from peft import LoraConfig, get_peft_model
 from trl import DPOTrainer
 from datasets import Dataset
+
+os.makedirs("./results", exist_ok=True)
+os.environ["WANDB_DIR"] = "./results"
+os.environ["WANDB_PROJECT"] = "ac-dpo"
 
 print("1. Loading Model and Tokenizer (GPT-2)...")
 model_id = "gpt2"
@@ -38,7 +43,7 @@ model.print_trainable_parameters()
 
 # USE TrainingArguments instead of DPOConfig
 training_args_easy = TrainingArguments(
-    output_dir="./results_easy",
+    output_dir="./results/easy",
     per_device_train_batch_size=4,
     max_steps=5,               
     learning_rate=1e-4,
@@ -70,7 +75,7 @@ model.set_adapter("hard_adapter")
 model.print_trainable_parameters()
 
 training_args_hard = TrainingArguments(
-    output_dir="./results_hard",
+    output_dir="./results/hard",
     per_device_train_batch_size=4,
     max_steps=5,
     learning_rate=5e-5,        

@@ -12,9 +12,7 @@ venv/
 miniconda3/
 
 # training outputs & checkpoints
-results_easy/
-results_hard/
-results_*/
+results/
 checkpoint-*/
 *.safetensors
 *.bin
