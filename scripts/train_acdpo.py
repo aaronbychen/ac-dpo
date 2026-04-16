@@ -105,6 +105,8 @@ trainer_s1 = DPOTrainer(
     beta=BETA,
     train_dataset=easy_data,
     tokenizer=tokenizer,
+    max_length=512,                # truncate
+    max_prompt_length=256,         # truncate
 )
 trainer_s1.train()
 stage1_runtime = time.time() - stage1_start_time
@@ -152,6 +154,8 @@ trainer_s2 = DPOTrainer(
     beta=BETA,
     train_dataset=hard_data,
     tokenizer=tokenizer,
+    max_length=512,                # same as above
+    max_prompt_length=256,         # same as above
 )
 trainer_s2.train()
 stage2_runtime = time.time() - stage2_start_time
