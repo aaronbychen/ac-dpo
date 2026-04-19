@@ -1,0 +1,180 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+% \usepackage{neurips_2024}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2024}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+\usepackage[final]{neurips_2024}
+
+\makeatletter
+\renewcommand{\@noticestring}{CSE 5100 Spring 2026 Project Proposal}
+\makeatother
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2024}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+
+\title{AC-DPO: Adaptive Capacity Direct Preference Optimization}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{
+  Aaron Chen \\
+  % \thanks{Use footnote for providing further information
+  %   about author (webpage, alternative address)---\emph{not} for acknowledging
+  %   funding agencies.} \\
+  % Department of Computer Science \\
+  Washington University in St. Louis \\
+  % Pittsburgh, PA 15213 \\
+  \texttt{aaronc@wustl.edu} \\
+  % examples of more authors
+  \And
+  Sherlock Zhang \\
+  Washington University in St. Louis \\
+  \texttt{jiaxi.zhang@wustl.edu} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+\begin{document}
+
+\maketitle
+
+% \begin{abstract}
+%   With the abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde abcde
+% \end{abstract}
+
+
+\vspace{-2.5em}
+\section{Project Description}
+
+Standard Direct Preference Optimization (DPO) treats all training preference pairs equally, which is inefficient since some pairs are easy and others are hard. Recent research has explored Curriculums, where the model is fed easy data first, then hard data, intending to solve this issue \cite{croitoru2024curriculum}. But this method changes the way data is fed into the model only. Such methods use a fixed model capacity (a static LoRA rank). Problem arise since giving a high-capacity model very easy data early in training leads to overfitting on superficial patterns, while a low-capacity model lacks the parameter capacity to learn hard logical reasoning later on. In this project, we no longer see the model as an entiy with fixed capacity, but rather let its capacity grow with the progression of the curriculum.
+
+We first use Low-Rank Adaptation (LoRA) like $r=8$, and train the language model using "Easy" preference pairs, where rewards and scores differ by a lot. This prevents the model to waste higher parameters on simple style alignments. The curriculum will progress to the "Hard" preference pairs, where rewards and scores differ by little and need deep reasoning. In this case, we will dynamically expand the rank of LoRA, like to $r=64$. We will implement this using the peft library on Hugging Face, either by merging the low-rank adapter and initializing a new high-rank adapter, or stacking adapters dynamically.
+
+In real world applications, this method can be used as effectively training AI coding assistants or Legal Q\&A systems. It makes the models to learn simple format standards with lower costs, and dynamically expand the parameter capacity to overcome complex logical reasoning tasks.
+
+We will perform a simplified experiment on a tiny model and a tiny preference dataset, dividing the data into easy and hard parts. Then, we will train easy data using low-rank adapters and expand on higher rank to train hard data, comparing with fixed rank DPO.
+
+
+\section{Existing literature}
+
+\subsection{DR-LoRA: Dynamic Rank LoRA for Mixture-of-Experts Adaptation \cite{deng2026drlora}}
+This article combines data curriculum and model curriculum in text-to-image generation tasks and progressively expand LoRA rank to dynamically increase the model capacity. This proves the feasibility of dynamic LoRA. We will use this article to support our hypothesis of letting the model capacity increase progressively with curriculum.
+
+Different from it, this article focuses on text-to-image generation, but our project focuses on the preference optimization of language models. Also, we will pay more attention to dynamic LoRA rank expansion based on easy/hard preference pairs rather than the more complex gradual unfreezing mechanism.
+
+\subsection{Curry-DPO: Enhancing Alignment using Curriculum Learning \& Ranked Preferences \cite{pattnaik2024currydpo}}
+In the LLM and DRO alignment settings of this article, it utilizes the ranking based on the quality of multiple responses to construct preference pairs. It also constructs its curriculum training based on the difficulties from easy to hard. This provides difficulty and ranking ideas related to our project. Also, it supports the practicability of organizing DPO training data based on the difficulties, and we will base on its calculation to classify easy and hard buckets.
+
+Different from it, Curry-DPO mainly focuses on data curriculum, but the model capacity is still fixed. Our project will utilize its data difficulty ranking as the baseline and further add a progressive LoRA rank with training stages, combing data curriculum and model capacity curriculum.
+
+
+\section{Deliverables}
+We will provide some technical deliverables other than project report and presentations:
+\begin{itemize}
+    \item Tuned model: A baseline model with standard DPO using a fixed LoRA rank; A tuned AC-DPO model using a dynamic LoRA rank with respect to the data difficulty.
+    \item Curriculum Dataset: The dataset version we used to experiment that is pre-processed and partitioned into "Easy" and "Hard" groups based on reward-margin difficulty scores.
+    \item Code Repository: All the code containing the training scripts for the two-phase AC-DPO pipeline, allowing others to verify and use the results.
+    
+\end{itemize}
+
+\section{Required Resources}
+This project will mainly use the GPU resources of WashU Academic Compute Cluster to complete the language model training and dynamic LoRA weights computations. To satisfy different stages of expanding parameters, we plan to request a GPU node with 20GB GPU RAM. Timewise, the early-stage toy problem debugging and testing is estimated to be 5 to 10 hours, while the final complete dataset DPO training and model evaluation is estimated to be an extra of 20 to 30 hours of GPU computing time.
+
+\section{Tentative Plan}
+
+\begin{enumerate}
+    \item March 23 - April 5 (Weeks 1-2):
+    We will complete the configuration of computing environments, and run through the complete code logic of dynamic expansion of LoRA in the toy problem setting.
+    \item April 6 - April 19 (Weeks 3-4):
+    We will use the complete dataset to perform the training of Curriculum DPO, and record the performance of the model in different stages of parameter expansion. Meanwhile, we will record the core experiment results and graphs and complete the slides due on April 19.
+    \item April 20 - May 3 (Weeks 5-6):
+    The final stage be will a complete evaluation and comparison between dynamic LoRA model and static baseline model. We will finish the Final Report due on May 3 based on all experiment data and conclusion.
+\end{enumerate}
+
+\begin{thebibliography}{4}
+
+\bibitem{croitoru2024curriculum}
+Croitoru, F.-A., Hondru, V., Ionescu, R. T., Sebe, N., \& Shah, M. (2024). Curriculum direct preference optimization for diffusion and consistency models. {\it arXiv preprint arXiv:2405.13637}.
+
+\bibitem{deng2026drlora}
+Deng, G., Li, B., Chen, R., Wang, H., Wen, L., \& Song, L. (2026). DR-LoRA: Dynamic rank LoRA for mixture-of-experts adaptation. {\it arXiv preprint arXiv:2601.04823}.
+
+\bibitem{pattnaik2024currydpo}
+Pattnaik, P., Maheshwary, R., Ogueji, K., Yadav, V., \& Madhusudhan, S. T. (2024). Curry-DPO: Enhancing alignment using curriculum learning \& ranked preferences. {\it arXiv preprint arXiv:2403.07230}.
+
+\bibitem{croitoru2026curriculumdpo}
+Croitoru, F.-A., Hondru, V., Ionescu, R. T., Sebe, N., \& Shah, M. (2026). Curriculum-DPO++: Direct preference optimization via data and model curricula for text-to-image generation. {\it arXiv preprint arXiv:2602.13055}.
+
+% \bibitem{devlin2019bert}
+% Devlin, J., Chang, M.-W., Lee, K., \& Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. {\it arXiv preprint arXiv:1810.04805}.
+
+% \bibitem{radford2019gpt2}
+% Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., \& Sutskever, I. (2019). {\it Language models are unsupervised multitask learners}. OpenAI Technical Report.
+
+% \bibitem{fedus2021switch}
+% Fedus, W., Zoph, B., \& Shazeer, N. (2021). Switch transformers: Scaling to trillion parameter models with simple and efficient sparsity. {\it arXiv preprint arXiv:2101.03961}.
+
+% \bibitem{clark2022unified}
+% Clark, A., de las Casas, D., Guy, A., Mensch, A., Paganini, M., Hoffmann, J., \& others. (2022). Unified scaling laws for routed language models. {\it arXiv preprint arXiv:2202.01169}.
+
+% \bibitem{radford2021clip}
+% Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., \& others. (2021). Learning transferable visual models from natural language supervision. {\it arXiv preprint arXiv:2103.00020}.
+
+% \bibitem{lin2014coco}
+% Lin, T.-Y., Maire, M., Belongie, S., Bourdev, L., Girshick, R., Hays, J., Perona, P., Ramanan, D., Zitnick, C. L., \& Doll{'a}r, P. (2014). Microsoft COCO: Common objects in context. {\it arXiv preprint arXiv:1405.0312}.
+
+% \bibitem{raffel2020t5}
+% Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., ... \& Liu, P. J. (2020). Exploring the limits of transfer learning with a unified text-to-text transformer. {\it Journal of Machine Learning Research}, 21(140), 1-67.
+
+% \bibitem{guo2025advancing}
+% Guo, H., Lu, H., Nan, G., Chu, B., Zhuang, J., Yang, Y., ... \& Jiang, X. (2025). Advancing Expert Specialization for Better MoE. {\it arXiv preprint arXiv:2505.22323}. (Accepted by NeurIPS 2025 Oral).
+
+\end{thebibliography}
+
+\end{document}
