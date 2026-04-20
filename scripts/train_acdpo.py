@@ -7,6 +7,19 @@ from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from peft import LoraConfig, get_peft_model
 from trl import DPOTrainer
+import random
+import numpy as np
+from transformers import set_seed
+
+# Seed control for reproducibility
+SEED = 5100
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+set_seed(SEED)
 
 RESULTS_DIR = "./results/acdpo"
 STAGE1_DIR = f"{RESULTS_DIR}/stage1"
@@ -75,8 +88,8 @@ stage1_total_params = count_total_parameters(model)
 
 training_args_s1 = TrainingArguments(
     output_dir=STAGE1_DIR,
-    per_device_train_batch_size=1,
-    max_steps=1000,
+    per_device_train_batch_size=4,
+    num_train_epochs=2.0,
     learning_rate=1e-4,
     logging_steps=10,
     save_strategy="no",
@@ -123,7 +136,7 @@ stage2_total_params = count_total_parameters(model)
 training_args_s2 = TrainingArguments(
     output_dir=STAGE2_DIR,
     per_device_train_batch_size=4,
-    max_steps=1000,
+    num_train_epochs=2.0,
     learning_rate=5e-5,        # lower learning rate for hard
     logging_steps=10,
     save_strategy="no",
@@ -160,7 +173,7 @@ experiment_metadata.update({
             "output_dir": STAGE1_DIR,
             "trainable_params": stage1_trainable_params,
             "total_params": stage1_total_params,
-            "max_steps": training_args_s1.max_steps,
+            "num_train_epochs": training_args_s1.num_train_epochs,
             "learning_rate": training_args_s1.learning_rate,
             "batch_size": training_args_s1.per_device_train_batch_size,
             "runtime_seconds": stage1_runtime,
@@ -171,7 +184,7 @@ experiment_metadata.update({
             "output_dir": STAGE2_DIR,
             "trainable_params": stage2_trainable_params,
             "total_params": stage2_total_params,
-            "max_steps": training_args_s2.max_steps,
+            "num_train_epochs": training_args_s2.num_train_epochs,
             "learning_rate": training_args_s2.learning_rate,
             "batch_size": training_args_s2.per_device_train_batch_size,
             "runtime_seconds": stage2_runtime,

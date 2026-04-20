@@ -7,6 +7,19 @@ from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from peft import LoraConfig, get_peft_model
 from trl import DPOTrainer
+import random
+import numpy as np
+from transformers import set_seed
+
+# Seed control for reproducibility
+SEED = 5100
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+set_seed(SEED)
 
 RESULTS_DIR = "./results/baseline_r64"
 MODEL_DIR = f"{RESULTS_DIR}/final_model"
@@ -14,7 +27,7 @@ ADAPTER_DIR = f"{RESULTS_DIR}/adapter"
 MODEL_ID = "gpt2"
 BETA = 0.1
 LORA_RANK = 64
-MAX_STEPS = 2000
+NUM_TRAIN_EPOCHS = 2.0
 
 os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(ADAPTER_DIR, exist_ok=True)
@@ -74,7 +87,7 @@ total_params = count_total_parameters(model)
 training_args = TrainingArguments(
     output_dir=RESULTS_DIR,
     per_device_train_batch_size=4,
-    max_steps=MAX_STEPS,
+    num_train_epochs=NUM_TRAIN_EPOCHS,
     learning_rate=5e-5,
     logging_steps=10,
     save_strategy="no",
@@ -109,7 +122,7 @@ experiment_metadata.update({
         "lora_rank": LORA_RANK,
         "trainable_params": trainable_params,
         "total_params": total_params,
-        "max_steps": training_args.max_steps,
+        "num_train_epochs": training_args.num_train_epochs,
         "learning_rate": training_args.learning_rate,
         "batch_size": training_args.per_device_train_batch_size,
         "runtime_seconds": train_runtime,

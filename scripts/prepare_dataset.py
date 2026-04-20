@@ -10,7 +10,7 @@ os.makedirs("./data", exist_ok=True)
 
 SEED = 5100
 TRAIN_FRAC = 0.8
-NUM_EXAMPLES = 2000
+NUM_EXAMPLES = 10000
 DATASET_ID = "Dahoas/rm-static"
 REWARD_MODEL_ID = "OpenAssistant/reward-model-deberta-v3-large-v2"
 
