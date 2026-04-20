@@ -27,7 +27,7 @@ ADAPTER_DIR = f"{RESULTS_DIR}/adapter"
 MODEL_ID = "gpt2"
 BETA = 0.1
 LORA_RANK = 64
-NUM_TRAIN_EPOCHS = 2.0
+NUM_TRAIN_EPOCHS = 4.0
 
 os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(ADAPTER_DIR, exist_ok=True)
