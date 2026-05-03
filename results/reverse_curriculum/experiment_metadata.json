@@ -1,0 +1,44 @@
+{
+  "created_at": "2026-05-03T09:13:18.661001+00:00",
+  "method": "reverse_curriculum_dpo",
+  "model_id": "gpt2",
+  "beta": 0.1,
+  "datasets": {
+    "stage1_hard": "./data/train_hard.jsonl",
+    "stage2_easy": "./data/train_easy.jsonl",
+    "stage1_size": 4000,
+    "stage2_size": 4000
+  },
+  "stages": {
+    "stage1": {
+      "data": "hard",
+      "lora_rank": 8,
+      "trainable_params": 294912,
+      "total_params": 124439808,
+      "num_train_epochs": 4.0,
+      "learning_rate": 0.0001,
+      "batch_size": 4,
+      "runtime_seconds": 1135.229053735733
+    },
+    "stage2": {
+      "data": "easy",
+      "lora_rank": 64,
+      "trainable_params": 2359296,
+      "total_params": 124439808,
+      "num_train_epochs": 4.0,
+      "learning_rate": 5e-05,
+      "batch_size": 4,
+      "runtime_seconds": 983.4591705799103
+    }
+  },
+  "outputs": {
+    "stage1_adapter": "./results/reverse_curriculum/stage1/adapter",
+    "stage1_merged_model": "./results/reverse_curriculum/stage1/merged_model",
+    "stage2_adapter": "./results/reverse_curriculum/stage2/adapter",
+    "final_model": "./results/reverse_curriculum/final_model",
+    "stage1_log": "./results/reverse_curriculum/stage1/train_log.json",
+    "stage2_log": "./results/reverse_curriculum/stage2/train_log.json"
+  },
+  "total_runtime_seconds": 2122.229318380356,
+  "peak_gpu_memory_gb": 9.061532020568848
+}
