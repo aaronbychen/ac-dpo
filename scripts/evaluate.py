@@ -16,6 +16,7 @@ ALL_MODELS = {
     "baseline_r64": "./results/baseline_r64/final_model",
     "reverse_curriculum": "./results/reverse_curriculum/final_model",
     "baseline_r8": "./results/baseline_r8/final_model",
+    "acdpo_v2": "./results/acdpo_v2/final_model",
 }
 
 # Only evaluate models that exist on disk
