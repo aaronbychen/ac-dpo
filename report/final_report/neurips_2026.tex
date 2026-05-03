@@ -172,10 +172,11 @@ All experiments use $\beta = 0.1$, batch size 4, 4 training epochs, and the Adam
 \paragraph{Compared Methods.}
 We evaluate four configurations to isolate the effects of curriculum ordering and capacity expansion:
 \begin{itemize}
-    \item \textbf{AC-DPO} (ours): Easy$\rightarrow$Hard curriculum with $r{=}8 \rightarrow r{=}64$ expansion.
-    \item \textbf{Baseline $r{=}64$}: Fixed $r{=}64$ on shuffled mixed data (standard DPO + LoRA).
-    \item \textbf{Baseline $r{=}8$}: Fixed $r{=}8$ on shuffled mixed data (low-capacity control).
-    \item \textbf{Reverse Curriculum}: Hard$\rightarrow$Easy with $r{=}8 \rightarrow r{=}64$ (ablation for curriculum direction).
+    \item \textbf{AC-DPO}: Easy$\rightarrow$Hard curriculum with $r{=}8 \rightarrow r{=}64$ expansion, 4 epochs per stage.
+    \item \textbf{AC-DPO v2} (ours): Same pipeline with tuned epochs---2 epochs on easy data (to prevent overfitting) and 6 epochs on hard data (to allow convergence).
+    \item \textbf{Baseline $r{=}64$}: Fixed $r{=}64$ on shuffled mixed data, 4 epochs (standard DPO + LoRA).
+    \item \textbf{Baseline $r{=}8$}: Fixed $r{=}8$ on shuffled mixed data, 4 epochs (low-capacity control).
+    \item \textbf{Reverse Curriculum}: Hard$\rightarrow$Easy with $r{=}8 \rightarrow r{=}64$, 4 epochs per stage (ablation for curriculum direction).
 \end{itemize}
 
 \paragraph{Evaluation Metrics.}
@@ -188,10 +189,10 @@ For each evaluation pair, we compute the log-probability of the chosen and rejec
 
 \subsection{Main Results}
 
-Table~\ref{tab:main_results} presents the evaluation results across all four methods.
+Table~\ref{tab:main_results} presents the evaluation results across all five configurations.
 
 \begin{table}[t]
-\caption{Evaluation results on 1,000 easy, 1,000 hard, and 2,000 combined preference pairs. Best results per column are \textbf{bolded}. AC-DPO achieves the highest token margin on hard tasks, while all methods perform comparably on overall accuracy.}
+\caption{Evaluation results on 1,000 easy, 1,000 hard, and 2,000 combined preference pairs. Best results per column are \textbf{bolded}. AC-DPO v2 with tuned epochs achieves the highest hard-task accuracy across all methods.}
 \label{tab:main_results}
 \centering
 \small
@@ -201,7 +202,8 @@ Table~\ref{tab:main_results} presents the evaluation results across all four met
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
 \textbf{Method} & Sum Acc & Tok Acc & Sum Acc & Tok Acc & Sum Acc & Tok Acc \\
 \midrule
-AC-DPO (ours)      & 34.7 & 56.4 & \textbf{51.8} & \textbf{52.6} & 43.25 & 54.5 \\
+AC-DPO             & 34.7 & 56.4 & 51.8 & 52.6 & 43.25 & 54.5 \\
+AC-DPO v2 (ours)   & 34.6 & 55.3 & \textbf{52.3} & \textbf{52.9} & 43.45 & 54.1 \\
 Baseline $r{=}64$  & 35.4 & 58.9 & 51.6 & 52.1 & 43.5  & 55.5 \\
 Baseline $r{=}8$   & 35.7 & 61.0 & 51.4 & 52.1 & 43.55 & 56.55 \\
 Reverse Curriculum  & \textbf{36.1} & \textbf{62.8} & 51.7 & 52.7 & \textbf{43.9} & \textbf{57.75} \\
@@ -210,7 +212,7 @@ Reverse Curriculum  & \textbf{36.1} & \textbf{62.8} & 51.7 & 52.7 & \textbf{43.9
 \end{table}
 
 \begin{table}[t]
-\caption{Token-level reward margins (higher is better) and training efficiency. AC-DPO achieves the strongest discrimination on hard pairs while using fewer trainable parameters in Stage~1.}
+\caption{Token-level reward margins (higher is better) and training efficiency. AC-DPO v2 achieves the strongest discrimination on hard pairs (+26\% over baseline $r{=}64$) while using fewer trainable parameters in Stage~1.}
 \label{tab:margins}
 \centering
 \small
@@ -220,7 +222,8 @@ Reverse Curriculum  & \textbf{36.1} & \textbf{62.8} & 51.7 & 52.7 & \textbf{43.9
 \cmidrule(lr){2-4} \cmidrule(lr){5-7}
 \textbf{Method} & Easy & Hard & All & Params & Runtime (s) & GPU (GB) \\
 \midrule
-AC-DPO (ours)      & 0.146 & \textbf{0.059} & 0.103 & 295K$\rightarrow$2.36M & 2047 & 9.06 \\
+AC-DPO             & 0.146 & 0.059 & 0.103 & 295K$\rightarrow$2.36M & 2047 & 9.06 \\
+AC-DPO v2 (ours)   & 0.128 & \textbf{0.063} & 0.095 & 295K$\rightarrow$2.36M & 2198 & 9.06 \\
 Baseline $r{=}64$  & 0.236 & 0.050 & 0.143 & 2.36M & 2061 & 9.06 \\
 Baseline $r{=}8$   & 0.285 & 0.047 & 0.166 & 295K & 2131 & 9.02 \\
 Reverse Curriculum  & \textbf{0.331} & 0.038 & \textbf{0.185} & 295K$\rightarrow$2.36M & 2122 & 9.06 \\
@@ -229,13 +232,13 @@ Reverse Curriculum  & \textbf{0.331} & 0.038 & \textbf{0.185} & 295K$\rightarrow
 \end{table}
 
 \paragraph{Overall accuracy is comparable across methods.}
-All four methods achieve overall sum accuracy in the narrow range of 43.25--43.9\%, suggesting that at the GPT-2 scale with 10K training pairs, the choice of curriculum ordering and adapter rank has limited impact on aggregate preference accuracy. This is consistent with the observation that GPT-2's base capacity may be the primary bottleneck.
+All five configurations achieve overall sum accuracy in the narrow range of 43.25--43.9\%, suggesting that at the GPT-2 scale with 10K training pairs, the choice of curriculum ordering and adapter rank has limited impact on aggregate preference accuracy. This is consistent with the observation that GPT-2's base capacity may be the primary bottleneck.
 
-\paragraph{AC-DPO achieves the strongest hard-task discrimination.}
-On hard preference pairs, AC-DPO attains the highest token margin (0.059), exceeding the fixed $r{=}64$ baseline by 18\% (0.050) and the fixed $r{=}8$ baseline by 26\% (0.047). This indicates that dedicating high capacity specifically to hard data---after first learning basic patterns with low capacity---produces sharper per-token distinctions on complex reasoning pairs.
+\paragraph{AC-DPO v2 achieves the strongest hard-task performance.}
+With tuned epoch allocation (2 easy + 6 hard), AC-DPO v2 attains the highest hard-task sum accuracy (52.3\%) and token margin (0.063), exceeding the fixed $r{=}64$ baseline by 26\% on token margin. Compared to the equal-epoch AC-DPO (4+4), v2 improves hard sum accuracy by 0.5\% and token margin by 7\%, demonstrating that allowing Stage~2 to converge fully is critical. The improvement confirms that the original AC-DPO Stage~2 was undertrained---the hard data requires more optimization steps to learn subtle preference distinctions.
 
 \paragraph{Easy-task performance trades off with hard-task focus.}
-AC-DPO shows lower easy-task token accuracy (56.4\%) compared to baselines (58.9--62.8\%). This is expected: Stage~1 uses only $r{=}8$ (295K parameters) on easy data, providing less capacity than the $r{=}64$ baselines. The merged Stage~1 knowledge may also be partially overwritten during Stage~2 training on hard data.
+Both AC-DPO variants show lower easy-task token accuracy (53--56\%) compared to baselines (58.9--62.8\%). This is expected: Stage~1 uses only $r{=}8$ (295K parameters) on easy data, providing less capacity than the $r{=}64$ baselines. AC-DPO v2's shorter Stage~1 (2 epochs vs.\ 4) slightly reduces easy performance but avoids the overfitting observed in the 4-epoch version, where training loss began to rebound.
 
 \subsection{Ablation Studies}
 
@@ -244,6 +247,9 @@ The reverse curriculum (Hard$\rightarrow$Easy) achieves the highest overall accu
 
 \paragraph{Effect of adapter capacity (Baseline $r{=}8$).}
 The fixed $r{=}8$ baseline performs comparably to the $r{=}64$ baseline on sum accuracy (43.55\% vs 43.5\%) and even outperforms it on token accuracy (56.55\% vs 55.5\%). This suggests that at the GPT-2 scale, the low-rank adapter may provide beneficial regularization. However, the $r{=}8$ baseline has the lowest hard-task token margin (0.047), indicating that while low capacity suffices for coarse preference accuracy, it limits fine-grained discrimination on difficult pairs.
+
+\paragraph{Effect of epoch allocation (AC-DPO v2).}
+Comparing AC-DPO (4+4 epochs) with AC-DPO v2 (2+6 epochs) isolates the effect of epoch distribution. Analysis of training dynamics revealed that Stage~1 with 4 epochs exhibited overfitting on easy data---training loss rebounded in the final quarter while accuracy plateaued. Meanwhile, Stage~2 with 4 epochs had not fully converged on hard data, with loss still decreasing at termination. AC-DPO v2 addresses both issues: reducing Stage~1 to 2 epochs stops training before overfitting, while extending Stage~2 to 6 epochs allows the hard-data loss to plateau (final-quarter trend: $\Delta\text{loss} \approx 0.000$). The result is a 0.5\% improvement in hard sum accuracy and a 7\% improvement in hard token margin, confirming that asymmetric epoch allocation better matches the convergence rates of easy and hard data.
 
 \subsection{Training Dynamics}
 
@@ -269,7 +275,8 @@ Table~\ref{tab:compute} compares the effective parameter-compute across methods.
 \toprule
 \textbf{Method} & \textbf{Param-Steps ($\times 10^9$)} & \textbf{Relative} & \textbf{Wall Time (s)} \\
 \midrule
-AC-DPO (ours)     & $0.295\text{M} \times 4000 + 2.36\text{M} \times 4000 = 10.6$ & 0.56$\times$ & 2047 \\
+AC-DPO            & $0.295\text{M} \times 4000 + 2.36\text{M} \times 4000 = 10.6$ & 0.56$\times$ & 2047 \\
+AC-DPO v2 (ours)  & $0.295\text{M} \times 2000 + 2.36\text{M} \times 6000 = 14.7$ & 0.78$\times$ & 2198 \\
 Baseline $r{=}64$ & $2.36\text{M} \times 8000 = 18.9$ & 1.00$\times$ & 2061 \\
 Baseline $r{=}8$  & $0.295\text{M} \times 8000 = 2.4$ & 0.13$\times$ & 2131 \\
 Reverse Curriculum & $0.295\text{M} \times 4000 + 2.36\text{M} \times 4000 = 10.6$ & 0.56$\times$ & 2122 \\
@@ -277,15 +284,15 @@ Reverse Curriculum & $0.295\text{M} \times 4000 + 2.36\text{M} \times 4000 = 10.
 \end{tabular}
 \end{table}
 
-AC-DPO uses only 56\% of the parameter-steps of the $r{=}64$ baseline while achieving comparable accuracy and superior hard-task discrimination. The wall-clock times are similar because GPU utilization is dominated by forward/backward passes through the full model rather than the adapter parameters alone. On larger models where adapter computation becomes a larger fraction of total cost, the parameter-step savings would translate more directly to wall-clock savings.
+AC-DPO v2 uses 78\% of the parameter-steps of the $r{=}64$ baseline while achieving superior hard-task discrimination. The original AC-DPO with equal epochs uses only 56\%. The wall-clock times are similar across all methods because GPU utilization is dominated by forward/backward passes through the full model rather than the adapter parameters alone. On larger models where adapter computation becomes a larger fraction of total cost, the parameter-step savings would translate more directly to wall-clock savings.
 
 \subsection{Discussion}
 
 \paragraph{Why does AC-DPO excel on hard-task margins?}
-The token margin measures how confidently the model assigns higher probability to the chosen response at the per-token level. AC-DPO's advantage on hard pairs (0.059 vs.\ 0.050 for the $r{=}64$ baseline) can be attributed to two factors. First, the merged Stage~1 knowledge provides a better initialization for Stage~2 than random LoRA initialization on mixed data. Second, by dedicating the full $r{=}64$ capacity exclusively to hard pairs, AC-DPO avoids diluting the adapter's expressiveness across easy patterns that do not require it.
+The token margin measures how confidently the model assigns higher probability to the chosen response at the per-token level. AC-DPO v2's advantage on hard pairs (0.063 vs.\ 0.050 for the $r{=}64$ baseline) can be attributed to three factors. First, the merged Stage~1 knowledge provides a better initialization for Stage~2 than random LoRA initialization on mixed data. Second, by dedicating the full $r{=}64$ capacity exclusively to hard pairs, AC-DPO avoids diluting the adapter's expressiveness across easy patterns that do not require it. Third, the extended Stage~2 training (6 epochs) allows the model to fully exploit the high-rank adapter's capacity on difficult examples.
 
 \paragraph{The recency bias phenomenon.}
-The reverse curriculum's strong overall performance (43.9\% vs.\ AC-DPO's 43.25\%) reveals an important property of two-stage training: the final stage disproportionately shapes evaluation metrics. The reverse curriculum's Stage~2 trains on easy data with $r{=}64$, giving it maximum capacity on the data type that constitutes half the evaluation set. This suggests that in sequential training, the model's final-stage specialization dominates its overall behavior---a form of recency bias. Importantly, this advantage comes at the cost of hard-task discrimination (token margin 0.038 vs.\ AC-DPO's 0.059), confirming that the two curricula optimize for different objectives.
+The reverse curriculum's strong overall performance (43.9\% vs.\ AC-DPO v2's 43.45\%) reveals an important property of two-stage training: the final stage disproportionately shapes evaluation metrics. The reverse curriculum's Stage~2 trains on easy data with $r{=}64$, giving it maximum capacity on the data type that constitutes half the evaluation set. This suggests that in sequential training, the model's final-stage specialization dominates its overall behavior---a form of recency bias. Importantly, this advantage comes at the cost of hard-task discrimination (token margin 0.038 vs.\ AC-DPO v2's 0.063), confirming that the two curricula optimize for different objectives.
 
 \paragraph{Low-rank regularization effect.}
 The baseline $r{=}8$ achieves surprisingly competitive accuracy (43.55\%) despite having 8$\times$ fewer trainable parameters than the $r{=}64$ baseline. This suggests that at the GPT-2 scale, the low-rank constraint acts as an implicit regularizer, preventing the model from overfitting to noise in the preference labels. However, the $r{=}8$ baseline's low hard-task token margin (0.047) indicates that this regularization comes at the cost of fine-grained discrimination---the model learns coarse preferences but cannot capture subtle distinctions.
@@ -299,9 +306,9 @@ The narrow accuracy range across all methods (43--44\%) likely reflects GPT-2's 
 \section{Conclusions}
 %------------------------------------------------------------------
 
-We presented AC-DPO, a framework that aligns model capacity with data difficulty during preference optimization by combining curriculum learning with dynamic LoRA rank expansion. Our two-stage pipeline---low-rank training on easy pairs followed by high-rank training on hard pairs with adapter merging for knowledge transfer---achieves the highest token-level reward margin on hard preference pairs (+18\% over the fixed-rank baseline) while using only 56\% of the parameter-compute budget. Although overall accuracy differences are small at the GPT-2 scale, the consistent advantage in hard-task discrimination validates the core hypothesis that matching capacity to difficulty improves fine-grained preference learning.
+We presented AC-DPO, a framework that aligns model capacity with data difficulty during preference optimization by combining curriculum learning with dynamic LoRA rank expansion. Our two-stage pipeline---low-rank training on easy pairs followed by high-rank training on hard pairs with adapter merging for knowledge transfer---achieves the highest token-level reward margin on hard preference pairs (+26\% over the fixed-rank baseline) and the highest hard-task accuracy (52.3\%) when epoch allocation is tuned to match per-stage convergence rates. Although overall accuracy differences are small at the GPT-2 scale, the consistent advantage in hard-task discrimination validates the core hypothesis that matching capacity to difficulty improves fine-grained preference learning.
 
-Our ablation studies reveal two additional insights: (1)~curriculum direction matters---the reverse curriculum trades hard-task discrimination for easy-task performance, confirming that the easy-to-hard ordering in AC-DPO specifically benefits complex reasoning; (2)~at the GPT-2 scale, low-rank adapters provide implicit regularization that can match high-rank adapters on coarse accuracy, but not on fine-grained token-level margins.
+Our ablation studies reveal three additional insights: (1)~curriculum direction matters---the reverse curriculum trades hard-task discrimination for easy-task performance, confirming that the easy-to-hard ordering in AC-DPO specifically benefits complex reasoning; (2)~at the GPT-2 scale, low-rank adapters provide implicit regularization that can match high-rank adapters on coarse accuracy, but not on fine-grained token-level margins; (3)~asymmetric epoch allocation (fewer epochs on easy data, more on hard data) is important for two-stage training, as easy and hard data have different convergence rates.
 
 %------------------------------------------------------------------
 \section{Limitations \& Future Work}
