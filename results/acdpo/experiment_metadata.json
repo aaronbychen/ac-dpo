@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-04-20T03:36:46.044245+00:00",
+  "created_at": "2026-04-20T06:46:10.952256+00:00",
   "model_id": "gpt2",
   "beta": 0.1,
   "datasets": {
@@ -15,10 +15,10 @@
       "output_dir": "./results/acdpo/stage1",
       "trainable_params": 294912,
       "total_params": 124734720,
-      "num_train_epochs": 2.0,
+      "num_train_epochs": 4.0,
       "learning_rate": 0.0001,
       "batch_size": 4,
-      "runtime_seconds": 486.0040080547333
+      "runtime_seconds": 961.6498215198517
     },
     "stage2": {
       "data": "hard",
@@ -26,10 +26,10 @@
       "output_dir": "./results/acdpo/stage2",
       "trainable_params": 2359296,
       "total_params": 126799104,
-      "num_train_epochs": 2.0,
+      "num_train_epochs": 4.0,
       "learning_rate": 5e-05,
       "batch_size": 4,
-      "runtime_seconds": 548.4607033729553
+      "runtime_seconds": 1081.6676771640778
     }
   },
   "outputs": {
@@ -40,6 +40,6 @@
     "stage1_log": "./results/acdpo/stage1/train_log.json",
     "stage2_log": "./results/acdpo/stage2/train_log.json"
   },
-  "total_runtime_seconds": 1037.5534989833832,
+  "total_runtime_seconds": 2046.5386171340942,
   "peak_gpu_memory_gb": 9.061139106750488
 }
