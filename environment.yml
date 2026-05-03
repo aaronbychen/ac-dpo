@@ -20,3 +20,4 @@ dependencies:
     - wandb
     - ipykernel
     - rich
+    - matplotlib==3.10.8

@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-04-20T03:58:32.233127+00:00",
+  "method": "fixed_rank_dpo_baseline",
+  "model_id": "gpt2",
+  "beta": 0.1,
+  "dataset": {
+    "train_all": "./data/train_all.jsonl",
+    "train_size": 8000
+  },
+  "training": {
+    "data": "mixed_easy_hard",
+    "lora_rank": 64,
+    "trainable_params": 2359296,
+    "total_params": 126799104,
+    "num_train_epochs": 2.0,
+    "learning_rate": 5e-05,
+    "batch_size": 4,
+    "runtime_seconds": 1043.1186583042145
+  },
+  "outputs": {
+    "adapter": "./results/baseline_r64/adapter",
+    "final_model": "./results/baseline_r64/final_model",
+    "train_log": "./results/baseline_r64/train_log.json"
+  },
+  "total_runtime_seconds": 1044.7889626026154,
+  "peak_gpu_memory_gb": 9.057843208312988
+}
