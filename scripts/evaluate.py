@@ -11,10 +11,15 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-MODELS = {
+ALL_MODELS = {
     "acdpo": "./results/acdpo/final_model",
     "baseline_r64": "./results/baseline_r64/final_model",
+    "reverse_curriculum": "./results/reverse_curriculum/final_model",
+    "baseline_r8": "./results/baseline_r8/final_model",
 }
+
+# Only evaluate models that exist on disk
+MODELS = {k: v for k, v in ALL_MODELS.items() if os.path.isdir(v)}
 
 EVAL_SPLITS = {
     "eval_easy": "./data/eval_easy.jsonl",
