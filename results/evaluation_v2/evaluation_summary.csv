@@ -1,0 +1,4 @@
+model,split,num_examples,sum_accuracy,avg_token_accuracy,avg_sum_margin,avg_token_margin,avg_chosen_sum_logp,avg_rejected_sum_logp,avg_chosen_token_logp,avg_rejected_token_logp,model_path,data_path
+acdpo_v2,eval_easy,1000,0.346,0.553,-68.88454977798462,0.12760820400714873,-218.1885374288559,-149.30398765087128,-2.7479432673454283,-2.875551471352577,./results/acdpo_v2/final_model,./data/eval_easy.jsonl
+acdpo_v2,eval_hard,1000,0.523,0.529,4.9739536399245265,0.06331995612755417,-167.85358268356325,-172.82753632348775,-2.6033780003488065,-2.6666979564763604,./results/acdpo_v2/final_model,./data/eval_hard.jsonl
+acdpo_v2,eval_all,2000,0.4345,0.541,-31.955298069030047,0.09546408006735146,-193.02106005620956,-161.0657619871795,-2.6756606338471176,-2.771124713914469,./results/acdpo_v2/final_model,./data/eval_all.jsonl

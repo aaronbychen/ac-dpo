@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-05-03T12:44:32.487280+00:00",
+  "max_length": 512,
+  "max_examples": null,
+  "runtime_seconds": 103.10526394844055,
+  "summaries": [
+    {
+      "split": "eval_easy",
+      "data_path": "./data/eval_easy.jsonl",
+      "num_examples": 1000,
+      "sum_accuracy": 0.346,
+      "avg_token_accuracy": 0.553,
+      "avg_sum_margin": -68.88454977798462,
+      "avg_token_margin": 0.12760820400714873,
+      "avg_chosen_sum_logp": -218.1885374288559,
+      "avg_rejected_sum_logp": -149.30398765087128,
+      "avg_chosen_token_logp": -2.7479432673454283,
+      "avg_rejected_token_logp": -2.875551471352577,
+      "model": "acdpo_v2",
+      "model_path": "./results/acdpo_v2/final_model"
+    },
+    {
+      "split": "eval_hard",
+      "data_path": "./data/eval_hard.jsonl",
+      "num_examples": 1000,
+      "sum_accuracy": 0.523,
+      "avg_token_accuracy": 0.529,
+      "avg_sum_margin": 4.9739536399245265,
+      "avg_token_margin": 0.06331995612755417,
+      "avg_chosen_sum_logp": -167.85358268356325,
+      "avg_rejected_sum_logp": -172.82753632348775,
+      "avg_chosen_token_logp": -2.6033780003488065,
+      "avg_rejected_token_logp": -2.6666979564763604,
+      "model": "acdpo_v2",
+      "model_path": "./results/acdpo_v2/final_model"
+    },
+    {
+      "split": "eval_all",
+      "data_path": "./data/eval_all.jsonl",
+      "num_examples": 2000,
+      "sum_accuracy": 0.4345,
+      "avg_token_accuracy": 0.541,
+      "avg_sum_margin": -31.955298069030047,
+      "avg_token_margin": 0.09546408006735146,
+      "avg_chosen_sum_logp": -193.02106005620956,
+      "avg_rejected_sum_logp": -161.0657619871795,
+      "avg_chosen_token_logp": -2.6756606338471176,
+      "avg_rejected_token_logp": -2.771124713914469,
+      "model": "acdpo_v2",
+      "model_path": "./results/acdpo_v2/final_model"
+    }
+  ]
+}
