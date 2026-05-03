@@ -1,31 +1,40 @@
-# python
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 .ipynb_checkpoints/
 
-# environments
+# Environments
 .env
 .venv
 env/
 venv/
 miniconda3/
 
-# training outputs & checkpoints
-results/
-checkpoint-*/
+# Large model files
 *.safetensors
 *.bin
 
-# weights & biases logs
+# Weights & Biases
 wandb/
 
-# os generated files
+# Training checkpoints
+checkpoint-*/
+
+# Results - ignore large files, keep evaluation & figures
+results/*/final_model/
+results/*/merged_model/
+results/**/merged_model/
+
+# Data files
+/data/
+
+# OS generated files
 .DS_Store
 Thumbs.db
-.vscode
+.vscode/
 
-# Latex build files
+# LaTeX build artifacts
 *.aux
 *.lof
 *.log
@@ -38,13 +47,9 @@ Thumbs.db
 *.cb
 *.cb2
 .*.lb
-*.pdf
 *.fdb_latexmk
 *.synctex
 *.synctex(busy)
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
-
-# Data files
-/data
