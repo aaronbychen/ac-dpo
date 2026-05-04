@@ -21,7 +21,7 @@ wandb/
 # Training checkpoints
 checkpoint-*/
 
-# Results - ignore large files, keep evaluation & figures
+# Results - ignore large model dirs, keep logs and evaluation
 results/*/final_model/
 results/*/merged_model/
 results/**/merged_model/
@@ -29,7 +29,7 @@ results/**/merged_model/
 # Data files
 /data/
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
 .vscode/
@@ -53,3 +53,6 @@ Thumbs.db
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+# Training logs
+*.out
