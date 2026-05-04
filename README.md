@@ -39,36 +39,6 @@ Activate:
 conda activate ac-dpo
 ```
 
-## GPU Access (WashU Cluster)
-
-**SSH in:**
-
-```bash
-ssh <wustl-id>@shell.engr.wustl.edu
-```
-
-**Request a GPU node**:
-
-```bash
-srun -A engr-acad-cse5100 -p condo-cse5100 --gres=gpu:a40:1 --cpus-per-task=4 --mem=32G --time=08:00:00 --pty bash
-```
-
-**Activate environment** (the conda env is pre-installed at `/home/compute/jiaxi.zhang/conda_envs/ac-dpo`):
-
-```bash
-eval "$(conda shell.bash hook)"
-conda activate /home/compute/jiaxi.zhang/conda_envs/ac-dpo
-```
-
-**Set environment variables**:
-
-```bash
-export WANDB_MODE=offline
-export HF_HOME=/scratch/<wustl-id>/hf_cache
-export TRANSFORMERS_CACHE=/scratch/<wustl-id>/hf_cache/transformers
-export HF_DATASETS_CACHE=/scratch/<wustl-id>/hf_cache/datasets
-```
-
 ## Running Experiments
 
 ### 1. Prepare the dataset
