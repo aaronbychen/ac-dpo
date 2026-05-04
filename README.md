@@ -11,7 +11,7 @@ ac-dpo/
 │   ├── data/               # prepare_dataset.py
 │   ├── evaluation/         # evaluate.py
 │   └── plotting/           # plot_training_curves.py
-├── data/                   # Generated dataset files (gitignored)
+├── data/                   # Preference dataset (easy/hard splits)
 ├── results/                # Training outputs (large files gitignored)
 │   ├── acdpo/              # AC-DPO (4+4 epochs)
 │   ├── acdpo_v2/           # AC-DPO v2 (2+6 epochs)

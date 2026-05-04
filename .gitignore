@@ -11,8 +11,6 @@ results/*/final_model/
 results/*/merged_model/
 results/**/merged_model/
 
-/data/
-
 .DS_Store
 Thumbs.db
 .vscode/
