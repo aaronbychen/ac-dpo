@@ -86,5 +86,5 @@ ax2.legend(fontsize=7, loc="upper left")
 ax2.grid(True, alpha=0.3)
 
 fig.tight_layout()
-fig.savefig("report/training_curves.png", bbox_inches="tight")
-print("Saved to report/training_curves.png")
+fig.savefig("results/training_curves.png", bbox_inches="tight")
+print("Saved to results/training_curves.png")
