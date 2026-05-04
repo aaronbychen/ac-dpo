@@ -1,6 +1,6 @@
 # AC-DPO: Adaptive Capacity Direct Preference Optimization
 
-Curriculum DPO with dynamic LoRA rank expansion that trains easy pairs at r=8, then expands to r=64 for hard reasoning tasks.
+Curriculum DPO with dynamic LoRA rank expansion that trains easy pairs at r=8, then expands to r=64 for hard pairs.
 
 ## Project Structure
 
