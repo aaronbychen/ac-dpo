@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-04-20T06:45:43.833152+00:00",
+  "dataset": "Dahoas/rm-static",
+  "dataset_split": "train[:10000]",
+  "reward_model": "OpenAssistant/reward-model-deberta-v3-large-v2",
+  "seed": 5100,
+  "train_frac": 0.8,
+  "counts": {
+    "all": 10000,
+    "easy_curriculum": 5000,
+    "hard_curriculum": 5000,
+    "train_easy": 4000,
+    "train_hard": 4000,
+    "train_all": 8000,
+    "eval_easy": 1000,
+    "eval_hard": 1000,
+    "eval_all": 2000
+  },
+  "margin_summary": {
+    "all": {
+      "min": -5.228631377220154,
+      "max": 6.723974108695984,
+      "mean": 0.7736926175239001
+    },
+    "easy": {
+      "min": 0.571951150894165,
+      "max": 6.723974108695984,
+      "mean": 1.697986129978206
+    },
+    "hard": {
+      "min": -5.228631377220154,
+      "max": 0.5715615153312683,
+      "mean": -0.15060089493040577
+    }
+  },
+  "margin_thresholds": {
+    "easy_min_margin": 0.571951150894165,
+    "hard_max_margin": 0.5715615153312683
+  },
+  "files": {
+    "easy_curriculum": "./data/easy_curriculum.jsonl",
+    "hard_curriculum": "./data/hard_curriculum.jsonl",
+    "train_easy": "./data/train_easy.jsonl",
+    "train_hard": "./data/train_hard.jsonl",
+    "train_all": "./data/train_all.jsonl",
+    "eval_easy": "./data/eval_easy.jsonl",
+    "eval_hard": "./data/eval_hard.jsonl",
+    "eval_all": "./data/eval_all.jsonl"
+  }
+}
