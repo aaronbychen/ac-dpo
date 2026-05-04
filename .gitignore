@@ -1,40 +1,22 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
-.ipynb_checkpoints/
 
-# Environments
-.env
-.venv
-env/
-venv/
-miniconda3/
-
-# Large model files
 *.safetensors
 *.bin
 
-# Weights & Biases
+# weights & biases
 wandb/
 
-# Training checkpoints
-checkpoint-*/
-
-# Results - ignore large files, keep evaluation & figures
+# ignore large model, keep logs and evaluation
 results/*/final_model/
 results/*/merged_model/
 results/**/merged_model/
 
-# Data files
 /data/
 
-# OS generated files
 .DS_Store
 Thumbs.db
 .vscode/
 
-# LaTeX build artifacts
 *.aux
 *.lof
 *.log
@@ -53,3 +35,5 @@ Thumbs.db
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+*.out
