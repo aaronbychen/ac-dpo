@@ -19,7 +19,6 @@ ac-dpo/
 │   ├── baseline_r8/        # Fixed r=8 baseline
 │   ├── reverse_curriculum/ # Reverse curriculum ablation (hard->easy)
 │   └── evaluation_v2/      # Final evaluation results
-├── report/                 # Final report
 ├── environment.yml
 └── README.md
 ```
