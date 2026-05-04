@@ -41,9 +41,6 @@ conda activate ac-dpo
 
 ```bash
 export WANDB_MODE=offline
-export HF_HOME=/scratch/<wustl-id>/hf_cache
-export TRANSFORMERS_CACHE=/scratch/<wustl-id>/hf_cache/transformers
-export HF_DATASETS_CACHE=/scratch/<wustl-id>/hf_cache/datasets
 ```
 
 ## Experiment
